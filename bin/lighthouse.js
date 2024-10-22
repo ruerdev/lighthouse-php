@@ -20,24 +20,24 @@
             chrome.kill();
         }, timeoutInMs);
 
-        let runnerResult;
-
         try {
-            runnerResult = await lighthouse.default(
+            const runnerResult = await lighthouse.default(
                 requestedUrl,
                 lighthouseOptions,
                 lighthouseConfig
             );
+
+            process.stdout.write(JSON.stringify(runnerResult));
         } catch (err) {
-            runnerResult = {
+            const errorRunnerResult = {
                 error: err.message,
             };
+
+            process.stdout.write(JSON.stringify(errorRunnerResult));
         } finally {
             clearTimeout(killTimer);
             await chrome.kill();
         }
-
-        process.stdout.write(JSON.stringify(runnerResult));
     } catch (error) {
         const errorResult = {
             error: "Unexpected error in script: " + error.message,
