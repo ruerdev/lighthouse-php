@@ -1,33 +1,47 @@
 (async () => {
-    const chromeLauncher = await import('chrome-launcher');
-    const lighthouse = await import('lighthouse');
+    try {
+        const chromeLauncher = await import('chrome-launcher');
+        const lighthouse = await import('lighthouse');
 
-    const inputArgs = JSON.parse(process.argv.slice(2));
-    const requestedUrl = inputArgs[0];
+        const inputArgs = JSON.parse(process.argv.slice(2));
+        const requestedUrl = inputArgs[0];
 
-    const chrome = await chromeLauncher.launch(inputArgs[1]);
+        const chrome = await chromeLauncher.launch(inputArgs[1]);
 
-    const lighthouseOptions = {
-        logLevel: 'info',
-        port: chrome.port,
-    };
+        const lighthouseOptions = {
+            logLevel: 'info',
+            port: chrome.port,
+        };
 
-    const lighthouseConfig = inputArgs[2];
-    const timeoutInMs = inputArgs[3];
+        const lighthouseConfig = inputArgs[2];
+        const timeoutInMs = inputArgs[3];
 
-    const killTimer = setTimeout(() => {
-        chrome.kill();
-    }, timeoutInMs);
+        const killTimer = setTimeout(() => {
+            chrome.kill();
+        }, timeoutInMs);
 
-    const runnerResult = await lighthouse.default(
-        requestedUrl,
-        lighthouseOptions,
-        lighthouseConfig
-    );
+        let runnerResult;
 
-    clearTimeout(killTimer);
+        try {
+            runnerResult = await lighthouse.default(
+                requestedUrl,
+                lighthouseOptions,
+                lighthouseConfig
+            );
+        } catch (err) {
+            runnerResult = {
+                error: err.message,
+            };
+        } finally {
+            clearTimeout(killTimer);
+            await chrome.kill();
+        }
 
-    await chrome.kill();
-
-    process.stdout.write(JSON.stringify(runnerResult));
+        process.stdout.write(JSON.stringify(runnerResult));
+    } catch (error) {
+        const errorResult = {
+            error: "Unexpected error in script: " + error.message,
+        };
+        process.stdout.write(JSON.stringify(errorResult));
+    }
 })();

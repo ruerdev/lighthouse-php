@@ -233,6 +233,10 @@ class Lighthouse
             throw CouldNotRunLighthouse::make($process->getErrorOutput());
         }
 
+        if (isset($result['error'])) {
+            throw CouldNotRunLighthouse::make($result['error']);
+        }
+
         if (array_key_exists('runtimeError', $result['lhr'])) {
             throw LighthouseReportedError::make(
                 $result['lhr']['runtimeError']['message'],
