@@ -2,11 +2,11 @@ import chromeLauncher from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 
 (async () => {
-    const arguments = JSON.parse(process.argv.slice(2));
-    const requestedUrl = arguments[0];
+    const inputArgs = JSON.parse(process.argv.slice(2));  // Renamed to inputArgs
+    const requestedUrl = inputArgs[0];
 
     // Launch Chrome and ensure it is fully ready before proceeding
-    const chrome = await chromeLauncher.launch(arguments[1]);
+    const chrome = await chromeLauncher.launch(inputArgs[1]);
     console.log(`Chrome launched on port: ${chrome.port}`);
 
     const lighthouseOptions = {
@@ -14,8 +14,8 @@ import lighthouse from 'lighthouse';
         port: chrome.port,
     };
 
-    const lighthouseConfig = arguments[2];
-    const timeoutInMs = arguments[3];
+    const lighthouseConfig = inputArgs[2];
+    const timeoutInMs = inputArgs[3];
 
     // Set a kill timer and log when Chrome is killed
     const killTimer = setTimeout(() => {
