@@ -9,7 +9,7 @@
 
     // Launch Chrome using chromeLauncher (note that we use chromeLauncher.launch)
     const chrome = await chromeLauncher.launch(inputArgs[1]);
-    console.log(`Chrome launched on port: ${chrome.port}`);
+    // console.log(`Chrome launched on port: ${chrome.port}`);
 
     const lighthouseOptions = {
         logLevel: 'info',
@@ -21,7 +21,7 @@
 
     // Set a kill timer to ensure Chrome doesn't hang indefinitely
     const killTimer = setTimeout(() => {
-        console.log("Killing Chrome due to timeout...");
+        // console.log("Killing Chrome due to timeout...");
         chrome.kill();
     }, timeoutInMs);
 
@@ -34,10 +34,10 @@
         );
         process.stdout.write(JSON.stringify(runnerResult));
     } catch (err) {
-        console.error("Lighthouse failed:", err);
+        // console.error("Lighthouse failed:", err);
     } finally {
         clearTimeout(killTimer);
-        console.log("Killing Chrome after audit...");
+        // console.log("Killing Chrome after audit...");
         await chrome.kill();
     }
 })();
