@@ -18,7 +18,7 @@
 
         const killTimer = setTimeout(() => {
             chrome.kill();
-        }, timeoutInMs);
+        }, 120000);
 
         try {
             const runnerResult = await lighthouse.default(
