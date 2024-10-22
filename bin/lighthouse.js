@@ -1,3 +1,5 @@
+import {ray} from "node-ray";
+
 (async () => {
     // Dynamically import ES Modules
     const chromeLauncher = await import('chrome-launcher');
@@ -9,6 +11,7 @@
 
     // Launch Chrome using chromeLauncher (note that we use chromeLauncher.launch)
     const chrome = await chromeLauncher.launch(inputArgs[1]);
+    ray('chromePort', chrome.port);
     // console.log(`Chrome launched on port: ${chrome.port}`);
 
     const lighthouseOptions = {
