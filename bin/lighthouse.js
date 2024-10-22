@@ -1,13 +1,13 @@
 (async () => {
     // Dynamically import ES Modules
-    const { default: chromeLauncher } = await import('chrome-launcher');
-    const { default: lighthouse } = await import('lighthouse');
+    const chromeLauncher = await import('chrome-launcher');
+    const lighthouse = await import('lighthouse');
 
     // Use a different name for "arguments" to avoid conflicts
     const inputArgs = JSON.parse(process.argv.slice(2));
     const requestedUrl = inputArgs[0];
 
-    // Launch Chrome
+    // Launch Chrome using chromeLauncher (note that we use chromeLauncher.launch)
     const chrome = await chromeLauncher.launch(inputArgs[1]);
     console.log(`Chrome launched on port: ${chrome.port}`);
 
@@ -27,7 +27,7 @@
 
     try {
         // Run Lighthouse
-        const runnerResult = await lighthouse(
+        const runnerResult = await lighthouse.default(
             requestedUrl,
             lighthouseOptions,
             lighthouseConfig
