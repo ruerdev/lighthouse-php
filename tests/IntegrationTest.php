@@ -11,7 +11,6 @@ it('can get the scores of a real site', function () {
     // remove "performance" as that key is sometimes empty
     // on GitHub actions due to less powerful hardware
     $expectedCategories = Arr::without(Category::values(), Category::Performance->value);
-    $expectedCategories = Arr::without($expectedCategories, Category::ProgressiveWebApp->value);
 
     expect($scores)->toHaveKeys($expectedCategories);
 });
