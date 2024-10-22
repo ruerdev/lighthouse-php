@@ -1,23 +1,25 @@
-import chromeLauncher from 'chrome-launcher';
-import lighthouse from 'lighthouse';
-
 (async () => {
-    const inputArgs = JSON.parse(process.argv.slice(2));  // Renamed to inputArgs
+    // Dynamically import ES Modules
+    const { default: chromeLauncher } = await import('chrome-launcher');
+    const { default: lighthouse } = await import('lighthouse');
+
+    // Use a different name for "arguments" to avoid conflicts
+    const inputArgs = JSON.parse(process.argv.slice(2));
     const requestedUrl = inputArgs[0];
 
-    // Launch Chrome and ensure it is fully ready before proceeding
+    // Launch Chrome
     const chrome = await chromeLauncher.launch(inputArgs[1]);
     console.log(`Chrome launched on port: ${chrome.port}`);
 
     const lighthouseOptions = {
         logLevel: 'info',
-        port: chrome.port,
+        port: chrome.port,  // Use dynamically assigned port
     };
 
     const lighthouseConfig = inputArgs[2];
     const timeoutInMs = inputArgs[3];
 
-    // Set a kill timer and log when Chrome is killed
+    // Set a kill timer to ensure Chrome doesn't hang indefinitely
     const killTimer = setTimeout(() => {
         console.log("Killing Chrome due to timeout...");
         chrome.kill();
@@ -25,10 +27,10 @@ import lighthouse from 'lighthouse';
 
     try {
         // Run Lighthouse
-        const runnerResult = await lighthouse.default(
+        const runnerResult = await lighthouse(
             requestedUrl,
             lighthouseOptions,
-            lighthouseConfig,
+            lighthouseConfig
         );
         process.stdout.write(JSON.stringify(runnerResult));
     } catch (err) {
