@@ -13,11 +13,6 @@
     };
 
     const lighthouseConfig = inputArgs[2];
-    const timeoutInMs = inputArgs[3];
-
-    const killTimer = setTimeout(() => {
-        chrome.kill();
-    }, timeoutInMs);
 
     try {
         const runnerResult = await lighthouse.default(
@@ -29,7 +24,6 @@
     } catch (err) {
         console.error("Lighthouse failed:", err);
     } finally {
-        clearTimeout(killTimer);
         await chrome.kill();
     }
 })();
